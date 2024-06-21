@@ -3,18 +3,41 @@
 {
 	"name": "Debian",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"dockerFile": "Dockerfile",
+	// "runArgs": [
+	// 	"-v",
+	// 	"${env:SSH_AUTH_SOCK}:/ssh-agent"
+	// ],
+	"containerEnv": {
+		"SHELL": "/bin/zsh",
+		"SSH_AUTH_SOCK": "/ssh-agent"
+	},
+		"mounts": [
+			"source=${env:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+			"source=${env:SSH_AUTH_SOCK},target=/run/host-services/ssh-auth.sock,type=bind,consistency=cached"
+		],
 	"features": {
 		"ghcr.io/dhoeric/features/act:1": {},
 		"ghcr.io/jungaretti/features/make:1": {},
-		"ghcr.io/devcontainers/features/go:1": {}
+		"ghcr.io/devcontainers/features/go:1": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
+		},
+		"ghcr.io/nils-geistmann/devcontainers-features/zsh:0": {
+			"setLocale": true,
+			"theme": "robbyrussell",
+			"plugins": "git docker",
+			"desiredLocale": "en_US.UTF-8 UTF-8"
+		}
 	},
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Configure tool-specific properties.
-	// "customizations": {},
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
 	"customizations": {
@@ -28,7 +51,11 @@
 				"github.vscode-github-actions",
 				"eamodio.gitlens",
 				"carlos-algms.make-task-provider"
-			]
+			],
+			"settings": {
+				// "terminal.integrated.fontFamily": "CaskaydiaCove NF, Cascadia Mono, Consolas, 'Courier New', monospace",
+				"terminal.integrated.shell.linux": "/bin/zsh"
+			}
 		}
 	}
 }
